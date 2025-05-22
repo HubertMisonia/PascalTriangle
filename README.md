@@ -92,6 +92,19 @@ All options are passed to the `\PascalTriangle` command as key-value pairs:
 
 ---
 
+
+<img src="https://raw.githubusercontent.com/HubertMisonia/PascalTriangle/main/images/ex1.png" alt="PascalTriangle \LaTeX{} Package"/>
+<img src="https://raw.githubusercontent.com/HubertMisonia/PascalTriangle/main/images/ex2.png" alt="PascalTriangle \LaTeX{} Package"/>
+<img src="https://raw.githubusercontent.com/HubertMisonia/PascalTriangle/main/images/ex3.png" alt="PascalTriangle \LaTeX{} Package"/>
+<img src="https://raw.githubusercontent.com/HubertMisonia/PascalTriangle/main/images/ex4.png" alt="PascalTriangle \LaTeX{} Package"/>
+<img src="https://raw.githubusercontent.com/HubertMisonia/PascalTriangle/main/images/ex5.png" alt="PascalTriangle \LaTeX{} Package"/>
+<img src="https://raw.githubusercontent.com/HubertMisonia/PascalTriangle/main/images/ex6.png" alt="PascalTriangle \LaTeX{} Package"/>
+<img src="https://raw.githubusercontent.com/HubertMisonia/PascalTriangle/main/images/ex7.png" alt="PascalTriangle \LaTeX{} Package"/>
+<img src="https://raw.githubusercontent.com/HubertMisonia/PascalTriangle/main/images/ex8.png" alt="PascalTriangle \LaTeX{} Package"/>
+<img src="https://raw.githubusercontent.com/HubertMisonia/PascalTriangle/main/images/ex9.png" alt="PascalTriangle \LaTeX{} Package"/>
+<img src="https://raw.githubusercontent.com/HubertMisonia/PascalTriangle/main/images/10.png" alt="PascalTriangle \LaTeX{} Package"/>
+
+
 ## 📄 License
 
 This project is currently **not under any license**. Please contact [Hubert Misonia](https://github.com/HubertMisonia) before using it for commercial or redistribution purposes.
