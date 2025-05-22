@@ -98,6 +98,9 @@ This project is currently **not under any license**. Please contact [Hubert Miso
 
 ---
 
+[View Documentation (PDF)](https://github.com/HubertMisonia/PascalTriangle/blob/main/exemples.pdf)
+
+
 ## 👨🏾‍💻 Author
 
 **Hubert Misonia** — [@HubertMisonia on GitHub](https://github.com/HubertMisonia)
