@@ -1,0 +1,175 @@
+% pascaltriangle.sty
+\ProvidesPackage{pascaltriangle}[2025/05/21 v1.4 Triangle de Pascal et motifs TikZ]
+
+\RequirePackage{tikz}
+\RequirePackage{xcolor}
+\RequirePackage{amsmath}
+\RequirePackage{fp}
+\RequirePackage{calc}
+\RequirePackage{xparse}
+\RequirePackage{pgfkeys}
+\RequirePackage{ifthen}
+\RequirePackage{xstring}
+
+% Couleurs principales
+\definecolor{primarycolor}{RGB}{4, 67, 137}      % Bleu
+\definecolor{secondarycolor}{RGB}{255, 193, 7}   % Jaune
+\definecolor{patterncolor}{RGB}{4, 67, 137}      % Couleur pour les motifs
+
+% Définition des options globales (paramètres nommés)
+\pgfkeys{
+  /pascaltriangle/.is family, /pascaltriangle,
+  rows/.initial      = 6,
+  radius/.initial    = 1.0,
+  fontSize/.initial  = 0.7,
+  showFormula/.initial = false,
+  nodeType/.initial  = hex,
+  margin/.initial    = 0,
+  pattern/.initial   = none,
+  divisor/.initial   = 2
+}
+
+% Calcul direct du coefficient binomial avec pgfmath (sans boucle foreach)
+\newcommand{\computebinomial}[2]{%
+  \pgfmathsetmacro{\tempn}{#1}%
+  \pgfmathsetmacro{\tempk}{#2}%
+  \pgfmathsetmacro{\binomresult}{1}%
+  \pgfmathtruncatemacro{\iterations}{min(\tempk, \tempn-\tempk)}%
+  \ifnum\iterations>0
+    \pgfmathloop
+      \ifnum\pgfmathcounter>\iterations
+      \else
+        \pgfmathsetmacro{\binomresult}{\binomresult * (\tempn - \pgfmathcounter + 1) / \pgfmathcounter}%
+      \repeatpgfmathloop
+  \fi
+  \pgfmathtruncatemacro{\binomresult}{\binomresult}%
+}
+
+% Variables globales
+\newcommand{\currentpattern}{}
+\newcommand{\currentdivisor}{}
+
+% Commande principale pour le triangle de Pascal
+\NewDocumentCommand{\PascalTriangle}{O{rows=6, radius=1.0, fontSize=0.7, showFormula=false, nodeType=hex, margin=0, pattern=none, divisor=2}}{%
+  % Réinitialiser les options
+  \pgfkeys{/pascaltriangle/.cd,
+    rows=6,
+    radius=1.0,
+    fontSize=0.7,
+    showFormula=false,
+    nodeType=hex,
+    margin=0,
+    pattern=none,
+    divisor=2
+  }
+  \pgfkeys{/pascaltriangle, #1}
+  
+  % Récupérer les valeurs
+  \edef\pprows{\pgfkeysvalueof{/pascaltriangle/rows}}
+  \edef\ppradius{\pgfkeysvalueof{/pascaltriangle/radius}}
+  \edef\ppfontsize{\pgfkeysvalueof{/pascaltriangle/fontSize}}
+  \edef\ppshowformula{\pgfkeysvalueof{/pascaltriangle/showFormula}}
+  \edef\ppnodetype{\pgfkeysvalueof{/pascaltriangle/nodeType}}
+  \edef\ppmargin{\pgfkeysvalueof{/pascaltriangle/margin}}
+  \edef\pppattern{\pgfkeysvalueof{/pascaltriangle/pattern}}
+  \edef\ppdivisor{\pgfkeysvalueof{/pascaltriangle/divisor}}
+  
+  \renewcommand{\currentpattern}{\pppattern}
+  \renewcommand{\currentdivisor}{\ppdivisor}
+
+  \begin{tikzpicture}[line width=.8pt]
+    \ifthenelse{\equal{\ppnodetype}{rect}}{
+      % Placement RECTANGLE
+      \foreach \n in {0,...,\pprows}{
+        \foreach \k in {0,...,\n}{
+          \pgfmathtruncatemacro\rest{\n-\k}
+          \pgfmathsetmacro\x{(\k - \n/2) * 2 * \ppradius}
+          \pgfmathsetmacro\y{-\n * 2 * \ppradius}
+          
+          % Calcul du coefficient binomial
+          \computebinomial{\n}{\k}
+          \let\currentbinom\binomresult
+          
+          % Déterminer la couleur
+          \def\fillcolor{white}
+          \IfStrEq{\currentpattern}{divisibility}{
+            \pgfmathtruncatemacro{\remainder}{mod(\currentbinom,\currentdivisor)}
+            \ifnum\remainder=0
+              \def\fillcolor{patterncolor}
+            \fi
+          }{}
+          
+          \begin{scope}[shift={(\x,\y)}]
+            \draw[
+              rounded corners=2pt,
+              thick,
+              draw=primarycolor,
+              fill=\fillcolor
+            ]
+              (-\ppradius+\ppmargin, -\ppradius+\ppmargin) rectangle (\ppradius-\ppmargin, \ppradius-\ppmargin);
+            \node[
+              align=center,
+              text=primarycolor!60,
+              scale=\ppfontsize,
+              inner sep=0pt,
+              anchor=center
+            ] at (0,0) {%
+              \colorbox{secondarycolor!80}{$\mathbf{\currentbinom}$}%
+              \ifthenelse{\equal{\ppshowformula}{true}}{
+                \\[1pt]
+                $~\displaystyle \frac{\n!}{\k! (\rest)!}$%
+              }{}
+            };
+          \end{scope}
+        }
+      }
+    }{
+      % Placement HEXAGONE
+      \foreach \n in {0,...,\pprows}{
+        \foreach \k in {0,...,\n}{
+          \pgfmathtruncatemacro\rest{\n-\k}
+          \pgfmathsetmacro\x{(\k-\n/2)*1.732*\ppradius}
+          \pgfmathsetmacro\y{-\n*1.5*\ppradius}
+          \pgfmathsetmacro{\inradius}{\ppradius-\ppmargin}
+          
+          % Calcul du coefficient binomial
+          \computebinomial{\n}{\k}
+          \let\currentbinom\binomresult
+          
+          % Déterminer la couleur
+          \def\fillcolor{white}
+          \IfStrEq{\currentpattern}{divisibility}{
+            \pgfmathtruncatemacro{\remainder}{mod(\currentbinom,\currentdivisor)}
+            \ifnum\remainder=0
+              \def\fillcolor{patterncolor}
+            \fi
+          }{}
+          
+          \begin{scope}[shift={(\x,\y)}]
+            \draw[
+              rounded corners=2pt,
+              thick,
+              draw=primarycolor,
+              fill=\fillcolor
+            ]
+              (30:\inradius) \foreach \xAngle in {90,150,...,330} { -- (\xAngle:\inradius) }
+              -- cycle;
+            \node[
+              align=center,
+              text=primarycolor!60,
+              scale=\ppfontsize,
+              inner sep=0pt,
+              anchor=center
+            ] at (0,0) {%
+            {$\mathbf{\currentbinom}$}%
+              \ifthenelse{\equal{\ppshowformula}{true}}{
+                \\[1pt]
+                $~\displaystyle \frac{\n!}{\k! (\rest)!}$%
+              }{}
+            };
+          \end{scope}
+        }
+      }
+    }
+  \end{tikzpicture}
+}

@@ -1,0 +1,17 @@
+main.aux
+main.log
+main.pdf
+main.fdb_latexmk
+main.fls
+main.tex
+main.synctex.gz
+
+
+exemples.aux
+exemples.log
+exemples.fdb_latexmk
+exemples.tex
+exemples.fls
+exemples.synctex.gz
+
+
